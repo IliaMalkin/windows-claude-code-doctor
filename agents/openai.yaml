@@ -1,0 +1,7 @@
+interface:
+  display_name: "Windows Claude Code Doctor"
+  short_description: "Fix Windows AI coding agent failures"
+  default_prompt: "Use $windows-claude-code-doctor to diagnose this Windows AI coding agent failure and propose the smallest verified fix."
+
+policy:
+  allow_implicit_invocation: true
