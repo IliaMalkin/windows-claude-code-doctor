@@ -16,14 +16,14 @@ AI coding agents are still mostly built and tested on Linux and macOS. When the 
 - SQLite `database is locked` loops caused by `.wal` / `.shm` sidecars and Windows file locking.
 - Resource locks: `EADDRINUSE` on ports, `EBUSY` / `EPERM` on files held by Defender, indexers, editors, or test watchers.
 
-This skill encodes those seven failure classes as runnable PowerShell playbooks. An agent that loads the skill stops guessing and starts diagnosing.
+This skill encodes those seven failure classes in `SKILL.md` and backs them with small PowerShell diagnostics. An agent that loads the skill stops guessing and starts diagnosing.
 
 ## What's inside
 
 ```
 windows-claude-code-doctor/
-├── SKILL.md                 # Skill entry point: triage, playbooks, output pattern.
-├── scripts/                 # PowerShell diagnostics, one per failure class.
+├── SKILL.md                 # Skill entry point: triage, failure classes, output pattern.
+├── scripts/                 # PowerShell diagnostics for the common Windows failure modes.
 │   ├── diagnose-shell.ps1
 │   ├── convert-agent-path.ps1
 │   ├── detect-runtime.ps1
@@ -59,7 +59,7 @@ The skill activates whenever an agent is on Windows and hits one of the seven fa
 Clone and run the scripts directly:
 
 ```powershell
-git clone https://github.com/kudnever/windows-claude-code-doctor.git
+git clone https://github.com/IliaMalkin/windows-claude-code-doctor.git
 cd windows-claude-code-doctor
 .\scripts\diagnose-shell.ps1
 ```
@@ -101,7 +101,7 @@ The wrapper preserves stdout, stderr, and `$LASTEXITCODE` separately so the agen
 When using this skill an agent should report:
 
 - **Environment**: shell, OS, WSL/native state, working directory.
-- **Failure class**: one of the seven playbooks.
+- **Failure class**: one of the seven failure classes.
 - **Evidence**: exact command/script output that supports the diagnosis.
 - **Fix**: smallest safe change or command.
 - **Verification**: command that proves the issue is gone.
@@ -130,4 +130,4 @@ MIT.
 
 ## Author
 
-[@kudnever](https://github.com/kudnever)
+[@IliaMalkin](https://github.com/IliaMalkin)
