@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  smoke:
+    name: PowerShell smoke
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Diagnose shell
+        shell: pwsh
+        run: ./scripts/diagnose-shell.ps1
+
+      - name: Verify path conversion
+        shell: pwsh
+        run: |
+          $wsl = ./scripts/convert-agent-path.ps1 -Path 'C:\Users\me\project\file.ts' -Target wsl
+          if ($wsl.Output -ne '/mnt/c/Users/me/project/file.ts') {
+            throw "Unexpected WSL path: $($wsl.Output)"
+          }
+
+          $windows = ./scripts/convert-agent-path.ps1 -Path '/mnt/c/Users/me/project/file.ts' -Target windows
+          if ($windows.Output -ne 'C:\Users\me\project\file.ts') {
+            throw "Unexpected Windows path: $($windows.Output)"
+          }
+
+      - name: Verify native invocation preserves exit code
+        shell: pwsh
+        run: |
+          ./scripts/invoke-native.ps1 -- powershell -NoProfile -Command "Write-Output ok; exit 0"
+          ./scripts/invoke-native.ps1 -- powershell -NoProfile -Command "exit 7"
+          if ($LASTEXITCODE -ne 7) {
+            throw "Expected propagated exit code 7, got $LASTEXITCODE"
+          }
