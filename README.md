@@ -1,5 +1,7 @@
 # windows-claude-code-doctor
 
+[![CI](https://github.com/IliaMalkin/windows-claude-code-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/IliaMalkin/windows-claude-code-doctor/actions/workflows/ci.yml)
+
 A diagnostic skill for AI coding agents on Windows. Turns vague "Claude Code is broken on Windows" reports into a shell-aware diagnosis and a small, testable fix.
 
 Works with Claude Code, Codex CLI, Cursor, OpenClaw, VS Code agents, and any terminal-based coding agent that drives PowerShell, cmd.exe, Git Bash, MSYS2, or WSL.
