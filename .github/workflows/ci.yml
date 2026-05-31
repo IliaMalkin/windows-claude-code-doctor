@@ -35,6 +35,8 @@ jobs:
         run: |
           ./scripts/invoke-native.ps1 -- powershell -NoProfile -Command "Write-Output ok; exit 0"
           ./scripts/invoke-native.ps1 -- powershell -NoProfile -Command "exit 7"
-          if ($LASTEXITCODE -ne 7) {
-            throw "Expected propagated exit code 7, got $LASTEXITCODE"
+          $code = $LASTEXITCODE
+          if ($code -ne 7) {
+            throw "Expected propagated exit code 7, got $code"
           }
+          exit 0
