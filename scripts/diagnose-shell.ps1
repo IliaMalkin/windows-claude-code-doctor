@@ -22,17 +22,20 @@ function Show-Command($Name) {
 }
 
 $shell = if ($PSVersionTable.PSEdition) { "PowerShell $($PSVersionTable.PSVersion) ($($PSVersionTable.PSEdition))" } else { "Windows PowerShell" }
-$isWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
-$isWsl = $false
-if ($env:WSL_DISTRO_NAME -or $env:WSL_INTEROP) { $isWsl = $true }
+# NOTE: not $isWindows - PowerShell 6+ declares $IsWindows as a read-only
+# automatic variable, and PowerShell variable names are case-insensitive, so
+# assigning to $isWindows throws "Cannot overwrite variable IsWindows".
+$onWindows = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
+$onWsl = $false
+if ($env:WSL_DISTRO_NAME -or $env:WSL_INTEROP) { $onWsl = $true }
 
 [pscustomobject]@{
     Shell = $shell
     OS = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
-    IsWindows = $isWindows
-    IsWSL = $isWsl
+    IsWindows = $onWindows
+    IsWSL = $onWsl
     CurrentDirectory = (Get-Location).Path
-    ExecutionPolicy = if ($isWindows) { Get-ExecutionPolicy -Scope Process } else { "n/a" }
+    ExecutionPolicy = if ($onWindows) { Get-ExecutionPolicy -Scope Process } else { "n/a" }
 } | Format-List
 
 "Common command availability:"
